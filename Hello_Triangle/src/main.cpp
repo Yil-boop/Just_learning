@@ -1,25 +1,15 @@
 #include <iostream>
+#include <fstream>
+#include <sstream>
+#include <string>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
-
 void framebuffer_size_callback(GLFWwindow* window,int ancho, int alto);
 void procesar_entrada(GLFWwindow* ventana);
-
-const char* vertexShaderSource = "#version 330 core\n" 
-"layout (location = 0) in vec3 aPos;\n"
-"void main()\n"
-"{\n"
-" gl_Position = vec4(aPos.x, aPos.y, aPos.z, 1.0);\n"
-"}\0";
-
-const char* fragmentShaderSource =
-"#version 330 core\n"
-"out vec4 FragColor;\n"
-"void main()\n"
-"{\n"
-"    FragColor = vec4(0.0f, 0.0f, 1.0f, 1.0f);\n"
-"}";
+std::string LoadShaderSource(const char* ShRuta);
+std::string vertexCode = LoadShaderSource("shaders/vertex_shader.glsl");
+std::string fragmentCode = LoadShaderSource("shaders/fragment_shader.glsl");
 
 int main() {
     
@@ -43,6 +33,9 @@ int main() {
         std::cout << "failed to initialize Glad " << std::endl;
         return -1;
     }
+
+    const char* vertexShaderSource = vertexCode.c_str();
+    const char* fragmentShaderSource = fragmentCode.c_str();
 
     unsigned int vertexShader;
     vertexShader = glCreateShader(GL_VERTEX_SHADER);
@@ -116,6 +109,19 @@ int main() {
     glfwTerminate();
 
     return 0;
+}
+
+std::string LoadShaderSource(const char* ShRuta) {
+    std::ifstream file(ShRuta);
+    if(!file.is_open()) {
+        std::cerr << "error, no se puede abrir el glsl" << ShRuta << std::endl;
+        return "";
+    }
+    std::stringstream buffer;
+    buffer << file.rdbuf();
+    file.close();
+
+    return buffer.str();
 }
 
 void framebuffer_size_callback(GLFWwindow* window,int ancho, int alto) {
