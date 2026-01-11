@@ -1,5 +1,0 @@
-{
-    "C_Cpp.errorSquiggles": "enabled",
-    "cmake.ignoreCMakeListsMissing": true,
-    "C_Cpp.default.compilerPath": "C:/mingw64/bin/g++.exe"
-}
